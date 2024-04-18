@@ -15,7 +15,7 @@
       *    identification et déclarations
       ***************************************************************     
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. desctab1.
+       PROGRAM-ID. filelect.
        AUTHOR . Isabelle Marand.
        
        
@@ -94,7 +94,7 @@
               10 WS-DFMM     PIC X(2)          .
               10 WS-DFDD     PIC X(2)          . 
             05 FILLER        PIC X(3)   VALUE ' | '.
-            05 WS-AGAMNT 	  PIC 9(6)V99 	  .
+            05 WS-AGAMNT 	  PIC 9(6)V99 	     .
             05 FILLER        PIC X(3)   VALUE ' | '.
       * Le caractère € prend 3 positions      
             05 WS-AGCURR 	  PIC X(3) VALUE '€'.
@@ -103,29 +103,42 @@
        WORKING-STORAGE SECTION.
       * gestion des status des fichiers  
        01  WS-STAT-FICAGA       PIC XX                  .
-       88  WS-STAT-FICOK                   VALUE '00'   .
-       88  WS-STAT-FICFIN                  VALUE '10'   .
+       88  WS-STAT-FICOK                     VALUE '00'   .
+       88  WS-STAT-FICFIN                    VALUE '10'   .
        01  WS-STAT-FICAGA2      PIC XX                  .
-       88  WS-STAT-FICOK2                  VALUE '00'   .
-       88  WS-STAT-FICFIN2                 VALUE '10'   .
+       88  WS-STAT-FICOK2                    VALUE '00'   .
+       88  WS-STAT-FICFIN2                   VALUE '10'   .
        01  WS-STAT-FICAGA-OUT   PIC XX                  .
-       88  WS-STAT-OFICOK                   VALUE '00'  .
-       88  WS-STAT-OFICDBL                  VALUE '06'  .
+       88  WS-STAT-OFICOK                     VALUE '00'  .
+       88  WS-STAT-OFICDBL                    VALUE '06'  .
 
       * gestion de la boucle de lecture et d'écriture des fichiers
        01  WS-E-REC             PIC X(250)              .
-       01  WS-NUM-FILE          PIC 9      VALUE 0      . 
-       01  WS-NB-ENREG          PIC 99     VALUE 0      .
-       01  WS-NB-ENREG-CHAR     REDEFINES WS-NB-ENREG     PIC ZZ .  
-       01  WS-IND-ENREG         PIC 99     VALUE 1      .
-       01  WS-NB-TYPACT         PIC 99     VALUE 0      .
-       01  WS-NB-TYPACT-CHAR    REDEFINES WS-NB-TYPACT    PIC ZZ . 
-       01  WS-NB-TYPRESIL         PIC 99     VALUE 0      .
-       01  WS-NB-TYPRESIL-CHAR  REDEFINES WS-NB-TYPRESIL  PIC ZZ . 
-       01  WS-NB-TYPSUSP         PIC 99     VALUE 0      .
-       01  WS-NB-TYPSUSP-CHAR    REDEFINES WS-NB-TYPSUSP  PIC ZZ . 
-       01  WS-IND-TAB        PIC 99      VALUE 0    .  
+       01  WS-NUM-FILE          PIC 9          VALUE 0      . 
+       01  WS-NB-ENREG          PIC 99         VALUE 0      .
+       01  WS-NB-ENREG-CHAR     REDEFINES WS-NB-ENREG       PIC ZZ .  
+       01  WS-NB-ENREG2         PIC 99         VALUE 0      .
+       01  WS-NB-ENREG2-CHAR    REDEFINES WS-NB-ENREG2      PIC ZZ . 
+       01  WS-NB-ENREGTOT       PIC 99         VALUE 0      .
+       01  WS-NB-ENREGTOT-CHAR  REDEFINES WS-NB-ENREGTOT    PIC ZZ . 
+       01  WS-IND-ENREG         PIC 99         VALUE 1      .
+       01  WS-NB-TYPACT         PIC 99         VALUE 0      .
+       01  WS-NB-TYPACT-CHAR    REDEFINES WS-NB-TYPACT      PIC ZZ . 
+       01  WS-AMNT-TYPACT        PIC 9(5)V99   VALUE 0      .
+      * 01  WS-AMNT-TYPACT-CHAR  PIC Z(4)9,99 .
+       01  WS-NB-TYPRESIL        PIC 99        VALUE 0      .
+       01  WS-NB-TYPRESIL-CHAR  REDEFINES WS-NB-TYPRESIL    PIC ZZ . 
+       01  WS-AMNT-TYPRESIL      PIC 9(5)V99   VALUE 0      .
+      * 01  WS-AMNT-TYPRESIL-CHAR 
+      *                         REDEFINES WS-AMNT-TYPRESIL PIC Z(4)9,99 .
+       01  WS-NB-TYPSUSP         PIC 99        VALUE 0      .
+       01  WS-NB-TYPSUSP-CHAR   REDEFINES WS-NB-TYPSUSP     PIC ZZ . 
+       01  WS-AMNT-TYPSUSP       PIC 9(5)V99   VALUE 0      .
+      * 01  WS-AMNT-TYPSUSP-CHAR REDEFINES WS-AMNT-TYPSUSP PIC Z(4)9,99 . 
+       01  WS-AMNT-TYP           PIC 9(5)V99   VALUE 0      .
+       01  WS-AMNT-TYP-CHAR      PIC Z(4)9,99 .
 
+       01  WS-IND-TAB           PIC 99         VALUE 0    .  
        01  WS-TAB-ENREG.
       *     03 DEF-TAB        PIC 99     VALUE 85   .
       *     03 ENR-AGA OCCURS  1 TO 99 DEPENDING DEF-TAB. 
@@ -161,17 +174,24 @@
       * gestion du rapport
        01  WS-LIG-ETOILE     PIC X(160)                            .
        01  WS-LIG-BLC        PIC X(25)                             . 
-       01  WS-LIG-RAP        PIC X(140)  VALUE '        BONJOUR'   .         
-       01  WS-LIG-FIN1       PIC X(35)  
-           VALUE 'THEN END!     LE FICHIER CONTIENT '              . 
-       01  WS-LIG-FIN2       PIC X(17)   VALUE ' ENREGISTREMENTS ' . 
+       01  WS-LIG-RAP        PIC X(140)  
+           VALUE '                     ETAT DES CONTRATS'          .             
+       01  WS-LIG-FIL1        PIC X(40)  
+           VALUE 'NB ENREGISTREMENTS DANS LE FICHIER 1 : ' .
+       01  WS-LIG-FIL2        PIC X(40)  
+           VALUE 'NB ENREGISTREMENTS DANS LE FICHIER 2 : ' .
+       01  WS-LIG-FIN1       PIC X(45)  
+           VALUE 'THEN END!     NOMBRE TOTAL D''ENREGISTEMRENTS:'.              . 
+      * 01  WS-LIG-FIN2       PIC X(17)   VALUE ' ENREGISTREMENTS ' . 
+       01  WS-LIG-EURO       PIC X(3)    VALUE '€'                 . 
        01  WS-LIG-DET1       PIC X(12)   VALUE '     ENREG. '      . 
        01  WS-LIG-DET2       PIC X(3)    VALUE ' : '               .
        01  WS-LIG-NBACT      PIC X(13)   VALUE ' NB ACTIFS : '     .
        01  WS-LIG-NBSUSP     PIC X(16)   VALUE ' NB SUSPENDUS : '  .
        01  WS-LIG-NBRESIL    PIC X(15)   VALUE ' NB RESILIES : '   .
        01  WS-LIG-NOUVACT    PIC X(10)   VALUE ' STATUT : '        .
-       01  WS-LIG-NOUVLIB    PIC X(30)   VALUE 'CONTRAT : '        .
+       01  WS-LIG-NOUVAMNT   PIC X(10)   VALUE ' VALEUR : '        .
+       01  WS-LIG-NOUVLIB    PIC X(10)   VALUE 'CONTRAT : '        .
        01  WS-LIB-AGALIB     PIC X(41)   VALUE SPACE               .
        01  WS-LIB-CLATC      PIC X(10)   VALUE SPACE               .
 
@@ -258,7 +278,7 @@
                  PERFORM TEST-STATUT
               ELSE 
                  IF WS-STAT-FICOK2 THEN
-                    ADD 1 TO WS-NB-ENREG 
+                    ADD 1 TO WS-NB-ENREG2  
                     PERFORM CHARGE-STRUCT
                  END-IF   
               END-IF           
@@ -266,11 +286,14 @@
 
       
        CHARGE-STRUCT.
-           MOVE WS-NB-ENREG TO WS-IND-TAB.
+
            IF WS-NUM-FILE = 1 THEN
-              MOVE E-REC-AGA TO WS-E-REC
+               MOVE WS-NB-ENREG TO WS-IND-TAB
+               MOVE E-REC-AGA TO WS-E-REC
            ELSE
-              MOVE E-REC-AGA2 TO WS-E-REC
+               COMPUTE WS-NB-ENREGTOT = WS-NB-ENREG +WS-NB-ENREG2 
+               MOVE WS-NB-ENREGTOT TO WS-IND-TAB
+               MOVE E-REC-AGA2 TO WS-E-REC
            END-IF.
 
            UNSTRING WS-E-REC  
@@ -289,12 +312,18 @@
                     FUNCTION TRIM(WS-CLACT OF ENR-AGA(WS-IND-TAB) )
                                          )
               WHEN 'ACTIF'
-                 ADD 1 TO WS-NB-TYPACT 
+                 ADD 1 TO WS-NB-TYPACT
+                 COMPUTE WS-AMNT-TYPACT = WS-AMNT-TYPACT 
+                          + WS-AGAMNT OF ENR-AGA(WS-IND-TAB)
               WHEN 'SUSPENDU'
                  ADD 1 TO WS-NB-TYPSUSP  
+                 COMPUTE WS-AMNT-TYPSUSP = WS-AMNT-TYPSUSP 
+                          + WS-AGAMNT OF ENR-AGA(WS-IND-TAB)
               WHEN OTHER
                  ADD 1 TO WS-NB-TYPRESIL  
-           END-EVALUATE.
+                 COMPUTE WS-AMNT-TYPRESIL = WS-AMNT-TYPRESIL 
+                          + WS-AGAMNT OF ENR-AGA(WS-IND-TAB)
+              END-EVALUATE.
 
        TRIER-TAB.
            SORT ENR-AGA ASCENDING 
@@ -312,18 +341,37 @@
            DISPLAY WS-LIG-ETOILE.
            MOVE WS-LIG-ETOILE TO E-REC-AGA-OUT.
            WRITE E-REC-AGA-OUT.
-           MOVE WS-LIG-RAP    TO E-REC-AGA-OUT. 
-           WRITE E-REC-AGA-OUT.
-           MOVE WS-LIG-ETOILE TO E-REC-AGA-OUT.
-           WRITE E-REC-AGA-OUT.
+
+           PERFORM ECRIT-LIGNE.
+           
+           STRING WS-LIG-FIL1 
+                  FUNCTION TRIM(WS-NB-ENREG-CHAR) 
+           DELIMITED BY SIZE        
+           INTO WS-LIG-RAP.               
+           PERFORM ECRIT-LIGNE.
+           DISPLAY WS-LIG-FIL1 ' ' FUNCTION TRIM(WS-NB-ENREG-CHAR).
+
+           STRING WS-LIG-FIL2 
+                  WS-NB-ENREG2-CHAR 
+           DELIMITED BY SIZE        
+           INTO WS-LIG-RAP.               
+           PERFORM ECRIT-LIGNE .
+
+           MOVE WS-LIG-ETOILE TO WS-LIG-RAP.
+           PERFORM ECRIT-LIGNE.
 
        ECRIT-DETAIL.
            INITIALIZE WS-LIB-AGALIB .
            INITIALIZE WS-LIB-CLATC .
+
       *    Je descends la table pour écrire et afficher mes données 
            PERFORM VARYING WS-IND-TAB FROM 1 BY 1 
-                   UNTIL (WS-IND-TAB > WS-NB-ENREG)
+                   UNTIL (WS-IND-TAB > WS-NB-ENREGTOT)
       * SI je change de type d'actif, je mets une entete specifique
+      * qui contient le nouveau libellé et la valeur totale des contrats
+      * associés à ce type.
+              INITIALIZE WS-LIG-RAP 
+           
               IF (WS-LIB-CLATC NOT = WS-CLACT OF ENR-AGA(WS-IND-TAB)) 
               THEN
                  MOVE WS-CLACT OF ENR-AGA(WS-IND-TAB) TO WS-LIB-CLATC
@@ -332,10 +380,26 @@
                       WS-LIB-CLATC 
                  DELIMITED BY SIZE        
                  INTO WS-LIG-RAP               
-                 INITIALIZE E-REC-AGA-OUT 
-                 MOVE WS-LIG-RAP TO E-REC-AGA-OUT 
-                 WRITE E-REC-AGA-OUT               
+                 PERFORM ECRIT-LIGNE  
+
+                 EVALUATE WS-LIG-NOUVACT    
+                    WHEN 'ACTIF'
+                       MOVE WS-AMNT-TYPACT TO WS-AMNT-TYP-CHAR
+                    WHEN 'SUSPENDU'
+                       MOVE WS-AMNT-TYPSUSP TO WS-AMNT-TYP-CHAR 
+                    WHEN OTHER
+                       MOVE WS-AMNT-TYPRESIL TO WS-AMNT-TYP-CHAR
+                 END-EVALUATE
+                 
+                 STRING WS-LIG-BLC 
+                      WS-LIG-NOUVAMNT 
+                      WS-AMNT-TYP-CHAR
+                      WS-LIG-EURO  
+                 DELIMITED BY SIZE        
+                 INTO WS-LIG-RAP
+                 PERFORM ECRIT-LIGNE
               END-IF
+
       * SI je change de libellé de contrat, je mets une entete specif.             
               IF (WS-LIB-AGALIB NOT = WS-AGALIB OF ENR-AGA(WS-IND-TAB)) 
               THEN
@@ -345,36 +409,35 @@
                       WS-LIB-AGALIB 
                  DELIMITED BY SIZE        
                  INTO WS-LIG-RAP
-                 INITIALIZE E-REC-AGA-OUT 
-                 MOVE WS-LIG-RAP TO E-REC-AGA-OUT 
-                 WRITE E-REC-AGA-OUT                                    
+
+                 PERFORM ECRIT-LIGNE                                    
                END-IF
-              INITIALIZE E-REC-AGA-OUT 
+              
+              INITIALIZE WS-LIG-RAP
+              INITIALIZE E-REC-AGA-OUT
               MOVE CORR ENR-AGA(WS-IND-TAB) TO ENR-AGA-OUT 
-              WRITE E-REC-AGA-OUT 
+              WRITE E-REC-AGA-OUT  
 
               DISPLAY '  ENREG' SPACE WS-IND-TAB SPACE ':' 
               SPACE ENR-AGA(WS-IND-TAB)
               MOVE ALL  '-' TO WS-LIG-ETOILE
               DISPLAY WS-LIG-ETOILE 
-              INITIALIZE E-REC-AGA-OUT 
-              MOVE WS-LIG-ETOILE TO E-REC-AGA-OUT 
-              WRITE E-REC-AGA-OUT 
+              MOVE WS-LIG-ETOILE TO WS-LIG-RAP  
+              PERFORM ECRIT-LIGNE 
            END-PERFORM.   
 
        ECRIT-FIN.
       * Je dis à tous que je suis arrivée au bout!!
                MOVE ALL  '=' TO WS-LIG-ETOILE.
-               INITIALIZE E-REC-AGA-OUT. 
-               MOVE WS-LIG-ETOILE TO E-REC-AGA-OUT.
-               WRITE E-REC-AGA-OUT .              
+               MOVE WS-LIG-ETOILE TO WS-LIG-RAP.
+               PERFORM ECRIT-LIGNE.              
                DISPLAY WS-LIG-ETOILE.
       * Donner le nb d'enreg.
       * Delimited by size --> size de la variable pas de la valeur
+               INITIALIZE WS-LIG-RAP.
                STRING WS-LIG-BLC 
                       WS-LIG-FIN1 
-                      WS-NB-ENREG-CHAR 
-                      WS-LIG-FIN2
+                      WS-NB-ENREGTOT-CHAR 
                       WS-LIG-NBACT
                       WS-NB-TYPACT-CHAR 
                       WS-LIG-NBSUSP
@@ -384,16 +447,17 @@
                DELIMITED BY SIZE        
                INTO WS-LIG-RAP .
 
-               INITIALIZE E-REC-AGA-OUT .
-               MOVE WS-LIG-RAP TO E-REC-AGA-OUT.
-               WRITE E-REC-AGA-OUT  .
+               PERFORM ECRIT-LIGNE.
                DISPLAY WS-LIG-RAP.
                
                MOVE ALL  '=' TO WS-LIG-ETOILE.
-               INITIALIZE E-REC-AGA-OUT.
-               MOVE WS-LIG-ETOILE TO E-REC-AGA-OUT.
-               WRITE E-REC-AGA-OUT . 
+               MOVE WS-LIG-ETOILE TO WS-LIG-RAP.
+               PERFORM ECRIT-LIGNE . 
                DISPLAY WS-LIG-ETOILE .
-
+      
+       ECRIT-LIGNE.
+                 INITIALIZE E-REC-AGA-OUT .
+                 MOVE WS-LIG-RAP TO E-REC-AGA-OUT .
+                 WRITE E-REC-AGA-OUT.  
 
 
