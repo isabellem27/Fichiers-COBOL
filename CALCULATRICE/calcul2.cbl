@@ -189,6 +189,7 @@
       *    et laisse la main à la boucle
       *    qui gère l'initialisation et l'affichage pour la saisie
            MOVE WS-RESULT TO WS-NUM1.
+           MOVE WS-RESULT TO WS-NUM1-AFF .
            INITIALIZE WS-RESULT.
            
       * Test si l'utilisateur veut sortir, si oui le programme s'arrete
