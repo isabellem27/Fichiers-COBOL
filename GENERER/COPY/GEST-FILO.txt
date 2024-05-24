@@ -1,0 +1,1 @@
+           COPY FILEO-GEST REPLACING ==:FNAME:== BY ==:WS-FICNOM:==.

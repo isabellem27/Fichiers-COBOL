@@ -1,0 +1,3 @@
+       01  :NOMFILE:-STATUS     PIC XX                .
+       88  :NOMFILE:-STATUS-OK         VALUE '00'     .
+       88  :NOMFILE:-STATUS-EOF        VALUE '10'     .

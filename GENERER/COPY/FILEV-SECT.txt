@@ -1,0 +1,5 @@
+       FD  :NOMFILE:
+           RECORD CONTAINS 2 TO :NBCAR: CHARACTERS 
+           RECORDING MODE IS V.
+       01  REC-:NOMFILE:        PIC X(:NBCAR:).  
+                  

@@ -1,0 +1,13 @@
+      *=============================================================*
+      *    Vos commentaires                                         *
+      *                                                             *
+      *                                                             *
+      *                                                             *
+      *                                                             *      
+      *    auteur : :NOMAUT:                                       *
+      *    Date creation :DATECREA:                                 *
+      *=============================================================*  
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. :NOMPRG:.
+       AUTHOR . :NOMAUT: 
+       

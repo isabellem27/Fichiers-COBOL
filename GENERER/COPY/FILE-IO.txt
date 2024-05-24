@@ -1,0 +1,6 @@
+           SELECT :NOMFILE: 
+           ASSIGN TO ':NOMFILE:.txt' 
+           ORGANIZATION IS LINE SEQUENTIAL 
+           ACCESS MODE IS SEQUENTIAL
+           FILE STATUS IS :NOMFILE:-STATUS.
+           

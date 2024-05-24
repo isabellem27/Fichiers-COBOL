@@ -1,0 +1,2 @@
+       WORKING-STORAGE SECTION.
+       01  WS-LIG-RAP     PIC X(200)   VALUE SPACE      .

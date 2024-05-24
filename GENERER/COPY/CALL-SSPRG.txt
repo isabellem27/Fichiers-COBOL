@@ -1,0 +1,9 @@
+           CALL ':NOMSSPRG:'   
+               USING BY :REF:
+
+           EXCEPTION
+              DISPLAY 'PB lors de l''appel de :NOMSSPRG:' SPACE 
+                       'ARRET DU PROGRAMME'
+            STOP RUN
+            END-CALL.
+            
