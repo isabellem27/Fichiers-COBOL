@@ -1,0 +1,26 @@
+       9020-SQL-ERROR-START.
+           DISPLAY "*** SQL ERROR ***".
+           DISPLAY WS-SQL-LIB SPACE "SQLCODE: " SQLCODE SPACE.
+           EVALUATE SQLCODE
+              WHEN  +100
+                 DISPLAY "Record not found"
+              WHEN  -01
+                 DISPLAY "Connection failed"
+              WHEN  -20
+                 DISPLAY "Internal error"
+              WHEN  -30
+                 DISPLAY "PostgreSQL error"
+                 DISPLAY "ERRCODE:" SPACE SQLSTATE
+                 DISPLAY SQLERRMC
+                 EXEC SQL
+                     ROLLBACK
+                 END-EXEC
+              WHEN  OTHER
+                 DISPLAY "Undefined error"
+                 DISPLAY "ERRCODE:" SPACE SQLSTATE
+                 DISPLAY SQLERRMC
+           END-EVALUATE.
+       9020-SQL-ERROR-END.
+           STOP RUN.
+           
+                

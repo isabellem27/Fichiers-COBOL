@@ -1,0 +1,11 @@
+      * Gestion des erreurs
+       01  WS-SQL-LIB           PIC X(80)               .
+       01  FIN                  PIC S9(9)      VALUE 100.
+
+      * Déclaration des variables correspondant à sql 
+       EXEC SQL BEGIN DECLARE SECTION END-EXEC           .
+      * paramètres pour connexion à la base 
+       01  DBNAME     PIC X(30)   VALUE ':DBNOM:'        .
+       01  USERNAME   PIC X(30)   VALUE ':DBUSER:'       .
+       01  PASSWD     PIC X(10)   VALUE ':DBPSW:'        .
+       

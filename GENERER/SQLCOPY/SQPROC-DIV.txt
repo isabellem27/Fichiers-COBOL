@@ -1,0 +1,86 @@
+       EXEC SQL END DECLARE SECTION END-EXEC. 
+       EXEC SQL INCLUDE SQLCA END-EXEC.
+       PROCEDURE DIVISION. 
+      *0000-main-start.
+
+           EXEC SQL 
+              CONNECT :USERNAME IDENTIFIED BY :PASSWD USING :DBNAME 
+           END-EXEC.
+           IF  SQLCODE NOT = ZERO 
+               MOVE 'CONNECTION BASE' TO WS-SQL-LIB
+               PERFORM 9020-SQL-ERROR-START
+                   THRU 9020-SQL-ERROR-END
+           END-IF.
+
+           
+
+
+      *0000-main-end.
+           EXEC SQL DISCONNECT ALL END-EXEC.
+           IF  SQLCODE NOT = ZERO 
+              MOVE 'DISCONNECTION BASE' TO WS-SQL-LIB 
+              PERFORM 9020-SQL-ERROR-START
+                   THRU 9020-SQL-ERROR-END
+           END-IF.      
+           STOP RUN. 
+
+       7000-cursname-START.
+      ***********************************************************
+      *       Déclaration du curseur cursname
+      ***********************************************************
+           EXEC SQL 
+              DECLARE cursname CURSOR FOR
+                 SELECT champs à récupérer
+
+                 FROM tables où sont stockés les informations 
+                 WHERE jointure
+                 ORDER BY tri     
+           END-EXEC.
+           IF  SQLCODE NOT = ZERO 
+              MOVE 'DECLARATION cursname' TO WS-SQL-LIB 
+              PERFORM 9020-SQL-ERROR-START
+                   THRU 9020-SQL-ERROR-END
+           END-IF.
+      ***********************************************************
+      *       Ouverture du curseur cursname
+      ***********************************************************           
+           EXEC SQL
+              OPEN cursname
+           END-EXEC.
+           IF  SQLCODE NOT = ZERO 
+              MOVE 'OUVERTURE cursname' TO WS-SQL-LIB 
+              PERFORM 9020-SQL-ERROR-START
+                   THRU 9020-SQL-ERROR-END
+           END-IF.
+      ***********************************************************
+      *       Lecture du curseur cursname
+      ***********************************************************
+           EXEC SQL 
+              FETCH cursname 
+              INTO :SQL-champ1, :SQL-champ2 
+           END-EXEC.
+           IF  (SQLCODE NOT = ZERO) AND (SQLCODE NOT = FIN) THEN
+              MOVE 'LECTURE cursname' TO WS-SQL-LIB 
+              PERFORM 9020-SQL-ERROR-START
+                   THRU 9020-SQL-ERROR-END
+           END-IF.
+      ***********************************************************
+      *       Exploitation des données du curseur cursname
+      ***********************************************************              
+           PERFORM UNTIL SQLCODE = FIN 
+            
+           END-PERFORM.
+      ***********************************************************
+      *       Fermeture du curseur cursname
+      ***********************************************************           
+           EXEC SQL
+              CLOSE cursname
+           END-EXEC.
+           IF  SQLCODE NOT = ZERO 
+              MOVE 'FERMETURE cursname' TO WS-SQL-LIB 
+              PERFORM 9020-SQL-ERROR-START
+                   THRU 9020-SQL-ERROR-END
+           END-IF.
+       7000-cursname-END.
+           EXIT.    
+                  
